@@ -34,7 +34,7 @@ const Login: React.FC = () => {
     setError("");
     setLoading(true);
 
-    const url = `${import.meta.env.VITE_API_URL}/ingresarsofware`;
+    const url = `${import.meta.env.VITE_API_URL}/ingresarSumate`;
     const apiKey = import.meta.env.VITE_APP_KEY;
 
     try {
