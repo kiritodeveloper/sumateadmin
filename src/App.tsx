@@ -20,6 +20,7 @@ import MainLayout from './layout/MainLayout';
 import VerifyLayout from './layout/verify';
 import Login from './pages/Login';
 import User from './pages/User';
+import Candidatos from './pages/Candidatos';
 import Personal from './pages/Personal';
 import PersonalView from './pages/PersonalView';
 import Service from './pages/Service';
@@ -101,6 +102,15 @@ function App() {
           <DefaultLayout>
             <PageTitle title="Admin | Lista de personal" />
             <Personal />
+          </DefaultLayout>
+        }
+      />
+      <Route
+        path="/Candidatos"
+        element={
+          <DefaultLayout>
+            <PageTitle title="Admin | Lista de personal" />
+            <Candidatos />
           </DefaultLayout>
         }
       />

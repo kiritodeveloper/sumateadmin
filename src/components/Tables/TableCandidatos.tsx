@@ -2,7 +2,7 @@ import { useState, useEffect, Fragment } from "react";
 import { BRAND } from "../../types/brand";
 import { Dialog, Transition } from "@headlessui/react";
 
-const API_URL = import.meta.env.VITE_API_URL + "/listaruser";
+const API_URL = import.meta.env.VITE_API_URL + "/listcandidatos";
 const SAVE_USER_URL = import.meta.env.VITE_API_URL + "/saveuser"; // Endpoint para guardar usuario
 const KEY_SYSTEM = import.meta.env.VITE_APP_KEY;
 const initialBrands: BRAND[] = [];
@@ -10,9 +10,10 @@ const BrandList = ({ brands, onUserSaved }: { brands: BRAND[]; onUserSaved: () =
   const [isOpen, setIsOpen] = useState(false);
   const [newUser, setNewUser] = useState({
     nombre_completo: "",
-    email: "",
-    password: "",
-    key_system: KEY_SYSTEM,
+    cartera: "",
+    lugar: "",
+    ci: "",
+    biografia: ""
   });
 
   const fetchBrands = async () => {
@@ -89,14 +90,14 @@ const BrandList = ({ brands, onUserSaved }: { brands: BRAND[]; onUserSaved: () =
           onClick={() => setIsOpen(true)}
           className="px-4 py-2 bg-primary text-white rounded-lg"
         >
-          Agregar usuario
+          Agregar Candidato
         </button>
         <br />
       </div>
       <div className="grid grid-cols-3 rounded-sm bg-gray-2 py-2.5 dark:bg-meta-4 sm:grid-cols-4">
         <p className="text-center font-medium uppercase text-black dark:text-white">nombre</p>
-        <p className="text-center font-medium uppercase text-black dark:text-white">correo</p>
-        <p className="text-center font-medium uppercase text-black dark:text-white">rol</p>
+        <p className="text-center font-medium uppercase text-black dark:text-white">Cartera</p>
+        <p className="text-center font-medium uppercase text-black dark:text-white">lugar</p>
         <p className="hidden text-center font-medium uppercase text-black dark:text-white sm:block">Opciones</p>
       </div>
       {brands.map((brand, key) => (
@@ -104,17 +105,17 @@ const BrandList = ({ brands, onUserSaved }: { brands: BRAND[]; onUserSaved: () =
           <div className="flex items-center gap-3">
             <p className="hidden sm:block text-black dark:text-white">{brand.nombre_completo}</p>
           </div>
-          <p className="text-center text-black dark:text-white">{brand.email}</p>
+          <p className="text-center text-black dark:text-white">{brand.cargo_postula}</p>
           <p className="text-center font-medium">
             <span
               className={`px-2 py-1 text-xs font-semibold border rounded-full
                 ${
-                  brand.rol_control === "static"
+                  brand.ci === "static"
                     ? "text-white bg-blue-600 border-blue-600 dark:bg-blue-400 dark:border-blue-400"
                     : "text-white bg-green-600 border-green-600 dark:bg-green-400 dark:border-green-400"
                 }`}
             >
-              {brand.rol_control}- Administrador
+              CI-{brand.ci}
             </span>
           </p>
 
@@ -142,7 +143,7 @@ const BrandList = ({ brands, onUserSaved }: { brands: BRAND[]; onUserSaved: () =
 
           <div className="fixed inset-0 flex items-center justify-center p-4">
             <Dialog.Panel className="w-96 rounded-lg bg-white p-6 shadow-xl dark:bg-boxdark dark:text-white">
-              <Dialog.Title className="text-lg font-bold">Registro Usuario Nuevo</Dialog.Title>
+              <Dialog.Title className="text-lg font-bold">Registro de nuevo candidato</Dialog.Title>
 
               <form className="mt-4" onSubmit={saveUser}>
                 <label className="block text-sm font-medium dark:text-gray-300">Nombre</label>
@@ -155,24 +156,40 @@ const BrandList = ({ brands, onUserSaved }: { brands: BRAND[]; onUserSaved: () =
                   placeholder="Ingresa tu nombre"
                 />
 
-                <label className="block text-sm font-medium mt-2 dark:text-gray-300">Correo</label>
+                <label className="block text-sm font-medium mt-2 dark:text-gray-300">cartera</label>
                 <input
-                  type="email"
-                  name="email"
-                  value={newUser.email}
+                  type="text"
+                  name="cartera"
+                  value={newUser.cartera}
                   onChange={handleChange}
                   className="w-full p-2 border rounded-lg mt-1 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                  placeholder="Ingresa tu correo"
+                  placeholder="Ingresa la cartera que ocupara"
                 />
-                <label className="block text-sm font-medium mt-2 dark:text-gray-300">Contraseña</label>
+                <label className="block text-sm font-medium mt-2 dark:text-gray-300">lugar o circunscripcion</label>
                 <input
-                  type="password"
-                  name="password"
-                  value={newUser.password}
+                  type="text"
+                  name="lugar"
+                  value={newUser.lugar}
                   onChange={handleChange}
                   className="w-full p-2 border rounded-lg mt-1 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                  placeholder="Ingresa una contraseña"
+                  placeholder="Ingresa el lugar"
                 />
+                <input
+                  type="text"
+                  name="ci"
+                  value={newUser.ci}
+                  onChange={handleChange}
+                  className="w-full p-2 border rounded-lg mt-1 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  placeholder="Ingresa el ci"
+                />
+                <input
+                  type="text"
+                  name="biografia"
+                  value={newUser.biografia}
+                  onChange={handleChange}
+                  className="w-full p-2 border rounded-lg mt-1 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  placeholder="Ingresa su biografia"
+                />       
                 <div className="flex justify-end gap-2 mt-4">
                   <button
                     type="button"
@@ -185,7 +202,7 @@ const BrandList = ({ brands, onUserSaved }: { brands: BRAND[]; onUserSaved: () =
                     type="submit"
                     className="px-4 py-2 bg-blue-600 text-white rounded-lg dark:bg-blue-500"
                   >
-                    Registrar
+                    Registrar candidato
                   </button>
                 </div>
               </form>
@@ -197,7 +214,7 @@ const BrandList = ({ brands, onUserSaved }: { brands: BRAND[]; onUserSaved: () =
   );
 };
 
-const TableOne = () => {
+const TableCandidatos = () => {
   const [brands, setBrands] = useState<BRAND[]>(initialBrands);
 
   // Consumir la API cuando el componente se monta
@@ -248,4 +265,4 @@ const TableOne = () => {
   );
 };
 
-export default TableOne;
+export default TableCandidatos;
