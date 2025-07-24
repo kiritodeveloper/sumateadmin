@@ -2,19 +2,17 @@ import { useState, useEffect, Fragment } from "react";
 import { BRAND } from "../../types/brand";
 import { Dialog, Transition } from "@headlessui/react";
 
-const API_URL = import.meta.env.VITE_API_URL + "/listcandidatos";
-const SAVE_USER_URL = import.meta.env.VITE_API_URL + "/savecandidato"; // Endpoint para guardar usuario
+const API_URL = import.meta.env.VITE_API_URL + "/listar";
+const SAVE_USER_URL = import.meta.env.VITE_API_URL + "/saveslider"; // Endpoint para guardar usuario
+const API_FTP_URL = import.meta.env.VITE_FTP_URL // Endpoint para guardar usuario
 const KEY_SYSTEM = import.meta.env.VITE_APP_KEY;
 const initialBrands: BRAND[] = [];
 const BrandList = ({ brands, onUserSaved }: { brands: BRAND[]; onUserSaved: () => void }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [newUser, setNewUser] = useState({
+    titulo:"",
+    ruta:"",
     profileImage: null,
-    nombre_completo: "",
-    cartera: "",
-    lugar: "",
-    ci: "",
-    biografia: ""
   });
 
   const fetchBrands = async () => {
@@ -39,11 +37,6 @@ const BrandList = ({ brands, onUserSaved }: { brands: BRAND[]; onUserSaved: () =
 
     // Crear FormData para enviar todos los datos
     const formData = new FormData();
-    formData.append("name", newUser.nombre_completo);
-    formData.append("ci", newUser.ci);
-    formData.append("cartera", newUser.cartera);
-    formData.append("lugar", newUser.lugar);
-    formData.append("biografia", newUser.biografia);
     if (newUser.profileImage) {
       formData.append("profileImage", newUser.profileImage); // Añadir la imagen al FormData
     }
@@ -99,9 +92,6 @@ const BrandList = ({ brands, onUserSaved }: { brands: BRAND[]; onUserSaved: () =
       }));
     }
   };
-
-
-
   return (
     <div className="rounded-md border border-stroke bg-white p-6 shadow-default dark:border-strokedark dark:bg-boxdark">
       <div className="flex flex-col items-end space-y-4">
@@ -109,36 +99,23 @@ const BrandList = ({ brands, onUserSaved }: { brands: BRAND[]; onUserSaved: () =
           onClick={() => setIsOpen(true)}
           className="px-4 py-2 bg-primary text-white rounded-lg"
         >
-          Agregar Candidato
+          Agregar Slider
         </button>
         <br />
       </div>
-      <div className="grid grid-cols-3 rounded-sm bg-gray-2 py-2.5 dark:bg-meta-4 sm:grid-cols-4">
+      <div className="grid grid-cols-3 rounded-sm bg-gray-2 py-2.5 dark:bg-meta-3 sm:grid-cols-3">
         <p className="text-center font-medium uppercase text-black dark:text-white">nombre</p>
-        <p className="text-center font-medium uppercase text-black dark:text-white">Cartera</p>
-        <p className="text-center font-medium uppercase text-black dark:text-white">lugar</p>
+        <p className="text-center font-medium uppercase text-black dark:text-white">imagen</p>
         <p className="hidden text-center font-medium uppercase text-black dark:text-white sm:block">Opciones</p>
       </div>
       {brands.map((brand, key) => (
-        <div key={key} className="grid grid-cols-3 border-b border-stroke py-2.5 dark:border-strokedark sm:grid-cols-4">
-          <div className="flex items-center gap-3">
-            <p className="hidden sm:block text-black dark:text-white">{brand.nombre_completo}</p>
-          </div>
-          <p className="text-center text-black dark:text-white">{brand.cargo_postula}</p>
-          <p className="text-center font-medium">
-            <span
-              className={`px-2 py-1 text-xs font-semibold border rounded-full
-                ${
-                  brand.ci === "static"
-                    ? "text-white bg-blue-600 border-blue-600 dark:bg-blue-400 dark:border-blue-400"
-                    : "text-white bg-green-600 border-green-600 dark:bg-green-400 dark:border-green-400"
-                }`}
-            >
-              CI-{brand.ci}
-            </span>
-          </p>
-
-
+        <div key={key} className="grid grid-cols-3 border-b border-stroke py-2.5 dark:border-strokedark sm:grid-cols-3">
+            <p className="text-center">
+                {brand.titulo}
+            </p>
+            <p className="flex items-center justify-center">
+                <img src= {API_FTP_URL + brand.imagen_url} alt="" className="w-20 h-20 object-cover rounded-md" />
+            </p>
           <p className="hidden text-center sm:block text-black dark:text-white">
             <button className="px-4-k py-4-k  text-white rounded-full metallic-button">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-4 w-4">
@@ -162,11 +139,10 @@ const BrandList = ({ brands, onUserSaved }: { brands: BRAND[]; onUserSaved: () =
 
           <div className="fixed inset-0 flex items-center justify-center p-4">
             <Dialog.Panel className="w-96 rounded-lg bg-white p-6 shadow-xl dark:bg-boxdark dark:text-white">
-              <Dialog.Title className="text-lg font-bold">Registro de nuevo candidato</Dialog.Title>
+              <Dialog.Title className="text-lg font-bold">Registro de Slider</Dialog.Title>
 
               <form className="grid grid-cols-1 gap-1" onSubmit={saveUser}>
               <div className="flex flex-col items-center">
-                  <label className="block text-sm font-medium dark:text-gray-300">Foto de Perfil</label>
                   <label className="mt-2 cursor-pointer flex items-center justify-center w-16 h-16 bg-gray-200 rounded-full dark:bg-gray-700">
                     {previewImage ? (
                       <img
@@ -198,54 +174,6 @@ const BrandList = ({ brands, onUserSaved }: { brands: BRAND[]; onUserSaved: () =
                     />
                   </label>
                 </div>
-
-                <label className="block text-sm font-medium dark:text-gray-300">Nombre completo</label>
-                <input
-                  type="text"
-                  name="nombre_completo"
-                  value={newUser.nombre_completo}
-                  onChange={handleChange}
-                  className="w-full p-2 border rounded-lg mt-1 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                  placeholder="Ingresa tu nombre"
-                />
-
-                <label className="block text-sm font-medium mt-2 dark:text-gray-300">cartera</label>
-                <input
-                  type="text"
-                  name="cartera"
-                  value={newUser.cartera}
-                  onChange={handleChange}
-                  className="w-full p-2 border rounded-lg mt-1 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                  placeholder="Ingresa la cartera que ocupara"
-                />
-                <label className="block text-sm font-medium mt-2 dark:text-gray-300">lugar o circunscripcion</label>
-                <input
-                  type="text"
-                  name="lugar"
-                  value={newUser.lugar}
-                  onChange={handleChange}
-                  className="w-full p-2 border rounded-lg mt-1 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                  placeholder="Ingresa el lugar"
-                />
-                <label htmlFor="ci">ci</label>
-                <input
-                  type="text"
-                  name="ci"
-                  value={newUser.ci}
-                  onChange={handleChange}
-                  className="w-full p-2 border rounded-lg mt-1 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                  placeholder="Ingresa el ci"
-                />
-                <label htmlFor="biografia">Biografia</label>
-                <textarea
-                  rows={5}
-                  type="text"
-                  name="biografia"
-                  value={newUser.biografia}
-                  onChange={handleChange}
-                  className="w-full p-2 border rounded-lg mt-1 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                  placeholder="Ingresa su biografia"
-                />       
                 <div className="flex justify-end gap-2 mt-4">
                   <button
                     type="button"
@@ -270,7 +198,7 @@ const BrandList = ({ brands, onUserSaved }: { brands: BRAND[]; onUserSaved: () =
   );
 };
 
-const TableCandidatos = () => {
+const TableSlider = () => {
   const [brands, setBrands] = useState<BRAND[]>(initialBrands);
 
   // Consumir la API cuando el componente se monta
@@ -321,4 +249,4 @@ const TableCandidatos = () => {
   );
 };
 
-export default TableCandidatos;
+export default TableSlider;

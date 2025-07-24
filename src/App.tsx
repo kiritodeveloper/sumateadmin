@@ -32,6 +32,10 @@ import RPTFacturas from './pages/RPTFacturas';
 import RPTFacturaanulada from './pages/RPTFacturaanulada';
 import RPTSPMovil from './pages/RPTSPMovil';
 import VerifyDatos from './pages/VerifyDatos';
+import Simpatizantes from './pages/Simpatizantes';
+import Militantes from './pages/Militantes';
+import SliderSumate from './pages/Slidersumate';
+import Propuestas from './pages/Propuestas';
 //
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -115,6 +119,43 @@ function App() {
         }
       />
       <Route
+        path="/simpatizantes"
+        element={
+          <DefaultLayout>
+            <PageTitle title="Admin | Lista de personal" />
+            <Simpatizantes />
+          </DefaultLayout>
+        }
+      />
+      <Route
+        path="/militantes"
+        element={
+          <DefaultLayout>
+            <PageTitle title="Admin | Lista de militantes" />
+            <Militantes />
+          </DefaultLayout>
+        }
+      />
+      <Route
+        path="/slidersumate"
+        element={
+          <DefaultLayout>
+            <PageTitle title="Admin | Lista de sliders" />
+            <SliderSumate />
+          </DefaultLayout>
+        }
+      />
+      <Route
+        path="/propuestas"
+        element={
+          <DefaultLayout>
+            <PageTitle title="Admin | Lista de propuestas" />
+            <Propuestas />
+          </DefaultLayout>
+        }
+      />
+
+      <Route
       path="personalview/:id"
         element={
           <DefaultLayout>
@@ -123,6 +164,7 @@ function App() {
           </DefaultLayout>
         }
       />
+
       <Route
         path="/services"
         element={

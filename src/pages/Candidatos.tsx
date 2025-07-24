@@ -1,4 +1,3 @@
-import TableOne from '../components/Tables/TableOne';
 import TableCandidatos from '../components/Tables/TableCandidatos';
 
 const Tables = () => {
